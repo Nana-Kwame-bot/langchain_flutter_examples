@@ -1,6 +1,6 @@
 # multi_modal
 
-A new Flutter project.
+A Basic Multi-Modal Chatbot with LangChain
 
 ## Getting Started
 

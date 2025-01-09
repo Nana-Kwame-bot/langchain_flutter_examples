@@ -27,7 +27,7 @@ class _ChatPageState extends State<ChatPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Basic example"),
+        title: const Text("Basic Multi-Modal Chatbot"),
       ),
       body: DashChat(
         currentUser: user,
