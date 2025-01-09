@@ -8,7 +8,7 @@ environment:
 
 dependencies:
   cupertino_icons: ^1.0.8
-  dash_chat: ^1.1.16
+  dash_chat_2: ^0.0.21
   flutter:
     sdk: flutter
 
