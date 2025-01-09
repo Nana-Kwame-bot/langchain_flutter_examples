@@ -1,0 +1,6 @@
+name: langchain_flutter_examples
+publish_to: none
+environment:
+  sdk: ^3.6.0
+workspace:
+  - apps/multi_modal
