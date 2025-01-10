@@ -51,7 +51,6 @@ extension BuildContextExtension on BuildContext {
                   ),
                   const SizedBox(height: 16),
                   TextField(
-                    onTapOutside: (_) => FocusScope.of(context).unfocus(),
                     controller: captionController,
                     decoration: const InputDecoration(
                       hintText: "Add a caption...",

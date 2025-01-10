@@ -22,14 +22,6 @@ class _ChatPageState extends State<ChatPage> {
   List<ChatMessage> messages = [];
   List<ChatUser> typingUsers = [];
 
-  final _textInputFocusNode = FocusNode();
-
-  @override
-  void dispose() {
-    super.dispose();
-    _textInputFocusNode.dispose();
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -40,18 +32,19 @@ class _ChatPageState extends State<ChatPage> {
       body: DashChat(
         typingUsers: typingUsers,
         inputOptions: InputOptions(
-          focusNode: _textInputFocusNode,
+          inputDisabled: typingUsers.isNotEmpty,
           sendOnEnter: true,
           trailing: [
             IconButton(
               icon: const Icon(Icons.camera_alt),
-              onPressed: () {
-                _pickAndShowImageDialog(source: ImageSource.camera);
-              },
+              onPressed: typingUsers.isEmpty
+                  ? () => _pickAndShowImageDialog(source: ImageSource.camera)
+                  : null,
             ),
             IconButton(
               icon: const Icon(Icons.image),
-              onPressed: () => _pickAndShowImageDialog(),
+              onPressed:
+                  typingUsers.isEmpty ? () => _pickAndShowImageDialog() : null,
             ),
           ],
         ),
@@ -69,8 +62,6 @@ class _ChatPageState extends State<ChatPage> {
     ImageSource source = ImageSource.gallery,
   }) async {
     final XFile? image = await _picker.pickImage(source: source);
-
-    _textInputFocusNode.unfocus();
 
     if (image != null) {
       if (!mounted) return;
@@ -92,26 +83,31 @@ class _ChatPageState extends State<ChatPage> {
     required XFile image,
     required String caption,
   }) async {
+    final XFile(:mimeType, :name, :path) = image;
+
     final userMessage = ChatMessage(
       user: Constants.user,
       createdAt: DateTime.now(),
       text: caption,
       medias: [
         ChatMedia(
-          url: image.path,
-          fileName: image.name,
+          url: path,
+          fileName: name,
           type: DashMediaType.image,
+          customProperties: {
+            "mimeType": mimeType,
+          },
         ),
       ],
     );
 
     _addUserMessage(userMessage);
 
-    setState(() {
-      typingUsers.add(Constants.ai);
-    });
-
     final response = await _chatRepository.sendImageMessage(userMessage);
+
+    setState(() {
+      typingUsers.remove(Constants.ai);
+    });
 
     response.fold<void>(
       (error) => _handleSendError(error: error, userMessage: userMessage),
@@ -120,10 +116,6 @@ class _ChatPageState extends State<ChatPage> {
         aiMessage: chatMessage,
       ),
     );
-
-    setState(() {
-      typingUsers.remove(Constants.ai);
-    });
   }
 
   void _handleOnSendPressed(ChatMessage textMessage) async {
@@ -134,11 +126,11 @@ class _ChatPageState extends State<ChatPage> {
 
     _addUserMessage(userMessage);
 
-    setState(() {
-      typingUsers.add(Constants.ai);
-    });
-
     final response = await _chatRepository.sendTextMessage(userMessage);
+
+    setState(() {
+      typingUsers.remove(Constants.ai);
+    });
 
     response.fold<void>(
       (error) => _handleSendError(error: error, userMessage: userMessage),
@@ -147,14 +139,11 @@ class _ChatPageState extends State<ChatPage> {
         aiMessage: chatMessage,
       ),
     );
-
-    setState(() {
-      typingUsers.remove(Constants.ai);
-    });
   }
 
   void _addUserMessage(ChatMessage message) {
     setState(() {
+      typingUsers.add(Constants.ai);
       messages.insert(0, message);
     });
   }
