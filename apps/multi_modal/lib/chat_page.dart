@@ -20,6 +20,7 @@ class _ChatPageState extends State<ChatPage> {
   ChatRepository get _chatRepository => widget.chatRepository;
 
   List<ChatMessage> messages = [];
+  List<ChatUser> typingUsers = [];
 
   final _textInputFocusNode = FocusNode();
 
@@ -37,6 +38,7 @@ class _ChatPageState extends State<ChatPage> {
         title: const Text("Multi-Modal Chatbot"),
       ),
       body: DashChat(
+        typingUsers: typingUsers,
         inputOptions: InputOptions(
           focusNode: _textInputFocusNode,
           sendOnEnter: true,
@@ -105,15 +107,23 @@ class _ChatPageState extends State<ChatPage> {
 
     _addUserMessage(userMessage);
 
+    setState(() {
+      typingUsers.add(Constants.ai);
+    });
+
     final response = await _chatRepository.sendImageMessage(userMessage);
 
-    response.fold(
+    response.fold<void>(
       (error) => _handleSendError(error: error, userMessage: userMessage),
       (chatMessage) => _handleSendSuccess(
         userMessage: userMessage,
         aiMessage: chatMessage,
       ),
     );
+
+    setState(() {
+      typingUsers.remove(Constants.ai);
+    });
   }
 
   void _handleOnSendPressed(ChatMessage textMessage) async {
@@ -124,6 +134,10 @@ class _ChatPageState extends State<ChatPage> {
 
     _addUserMessage(userMessage);
 
+    setState(() {
+      typingUsers.add(Constants.ai);
+    });
+
     final response = await _chatRepository.sendTextMessage(userMessage);
 
     response.fold<void>(
@@ -133,6 +147,10 @@ class _ChatPageState extends State<ChatPage> {
         aiMessage: chatMessage,
       ),
     );
+
+    setState(() {
+      typingUsers.remove(Constants.ai);
+    });
   }
 
   void _addUserMessage(ChatMessage message) {
