@@ -1,10 +1,10 @@
-import "dart:io";
-
 import "package:dash_chat_2/dash_chat_2.dart";
 import "package:flutter/material.dart";
+import "package:multi_modal/extensions/build_context_extension.dart";
 import "package:multi_modal/chat_repository.dart";
 import "package:multi_modal/constants.dart";
 import "package:image_picker/image_picker.dart";
+import "package:multi_modal/extensions/chat_message_extension.dart";
 
 class ChatPage extends StatefulWidget {
   const ChatPage({super.key, required this.chatRepository});
@@ -15,115 +15,18 @@ class ChatPage extends StatefulWidget {
   State<ChatPage> createState() => _ChatPageState();
 }
 
-// ! fix renderflex
-
 class _ChatPageState extends State<ChatPage> {
-  final TextEditingController _textController = TextEditingController();
   final ImagePicker _picker = ImagePicker();
   ChatRepository get _chatRepository => widget.chatRepository;
 
   List<ChatMessage> messages = [];
 
-  Future<void> _showImageCaptionDialog(XFile image) async {
-    final TextEditingController captionController = TextEditingController();
+  final _textInputFocusNode = FocusNode();
 
-    return showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return Dialog(
-          child: Container(
-            padding: const EdgeInsets.all(16),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                const Text(
-                  "Preview & Add Caption",
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-                const SizedBox(height: 16),
-                // Image preview with constrained height
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(8),
-                  child: Image.file(
-                    File(image.path),
-                    height: 200,
-                    fit: BoxFit.cover,
-                  ),
-                ),
-                const SizedBox(height: 16),
-                TextField(
-                  controller: captionController,
-                  decoration: const InputDecoration(
-                    hintText: "Add a caption...",
-                    border: OutlineInputBorder(),
-                  ),
-                  maxLines: 3,
-                ),
-                const SizedBox(height: 16),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    TextButton(
-                      onPressed: () => Navigator.pop(context),
-                      child: const Text("Cancel"),
-                    ),
-                    const SizedBox(width: 8),
-                    ElevatedButton(
-                      onPressed: () {
-                        _sendImageMessage(image, captionController.text);
-                        Navigator.pop(context);
-                      },
-                      child: const Text("Send"),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
-        );
-      },
-    );
-  }
-
-  Future<void> _pickAndShowImageDialog({
-    ImageSource source = ImageSource.gallery,
-  }) async {
-    final XFile? image = await _picker.pickImage(source: source);
-
-    if (image != null) {
-      await _showImageCaptionDialog(image);
-    }
-  }
-
-  Future<void> _sendImageMessage(XFile image, String caption) async {
-    final ChatMessage message = ChatMessage(
-      user: Constants.user,
-      createdAt: DateTime.now(),
-      text: caption,
-      medias: [
-        ChatMedia(
-          url: image.path,
-          fileName: image.name,
-          type: MediaType.image,
-        ),
-      ],
-    );
-
-    setState(() {
-      messages.insert(0, message);
-    });
-
-    // Handle sending to chat repository
-    final response = await _chatRepository.handleOnSend(message);
-
-    setState(() {
-      messages.insert(0, response);
-    });
+  @override
+  void dispose() {
+    super.dispose();
+    _textInputFocusNode.dispose();
   }
 
   @override
@@ -135,7 +38,8 @@ class _ChatPageState extends State<ChatPage> {
       ),
       body: DashChat(
         inputOptions: InputOptions(
-          textController: _textController,
+          focusNode: _textInputFocusNode,
+          sendOnEnter: true,
           trailing: [
             IconButton(
               icon: const Icon(Icons.camera_alt),
@@ -147,28 +51,154 @@ class _ChatPageState extends State<ChatPage> {
               icon: const Icon(Icons.image),
               onPressed: () => _pickAndShowImageDialog(),
             ),
-            IconButton(
-              icon: const Icon(Icons.attach_file),
-              onPressed: () {},
-            ),
           ],
         ),
         currentUser: Constants.user,
-        onSend: _handleOnSend,
+        onSend: _handleOnSendPressed,
         messages: messages,
+        messageOptions: MessageOptions(
+          showOtherUsersAvatar: true,
+        ),
       ),
     );
   }
 
-  void _handleOnSend(message) async {
+  Future<void> _pickAndShowImageDialog({
+    ImageSource source = ImageSource.gallery,
+  }) async {
+    final XFile? image = await _picker.pickImage(source: source);
+
+    _textInputFocusNode.unfocus();
+
+    if (image != null) {
+      if (!mounted) return;
+
+      final result = await context.showImageCaptionDialog(image);
+
+      result.fold<void>(
+        (error) => context.showErrorMessage(error),
+        (right) async {
+          final (:image, :caption) = right;
+
+          await _sendImageMessage(image: image, caption: caption);
+        },
+      );
+    }
+  }
+
+  Future<void> _sendImageMessage({
+    required XFile image,
+    required String caption,
+  }) async {
+    final userMessage = ChatMessage(
+      status: MessageStatus.pending,
+      user: Constants.user,
+      createdAt: DateTime.now(),
+      text: caption,
+      medias: [
+        ChatMedia(
+          url: image.path,
+          fileName: image.name,
+          type: DashMediaType.image,
+        ),
+      ],
+    );
+
+    _addPendingMessage(userMessage);
+
+    final response = await _chatRepository.sendImageMessage(userMessage);
+
+    response.fold(
+      (error) => _handleSendError(error: error, userMessage: userMessage),
+      (chatMessage) => _handleSendSuccess(
+        userMessage: userMessage,
+        aiMessage: chatMessage,
+      ),
+    );
+  }
+
+  void _handleOnSendPressed(ChatMessage textMessage) async {
+    final userMessage = textMessage.copyWith(
+      status: MessageStatus.pending,
+      user: Constants.user,
+      createdAt: DateTime.now(),
+    );
+
+    _addPendingMessage(userMessage);
+
+    final response = await _chatRepository.sendTextMessage(userMessage);
+
+    response.fold<void>(
+      (error) => _handleSendError(error: error, userMessage: userMessage),
+      (chatMessage) => _handleSendSuccess(
+        userMessage: userMessage,
+        aiMessage: chatMessage,
+      ),
+    );
+  }
+
+  void _addPendingMessage(ChatMessage message) {
     setState(() {
       messages.insert(0, message);
     });
+  }
 
-    final response = await _chatRepository.handleOnSend(message);
+  void _handleSendError({
+    required String error,
+    required ChatMessage userMessage,
+  }) {
+    context.showErrorMessage(error);
 
+    _updateMessageStatus(message: userMessage, newStatus: MessageStatus.failed);
+  }
+
+  void _handleSendSuccess({
+    required ChatMessage userMessage,
+    required ChatMessage aiMessage,
+  }) {
     setState(() {
-      messages.insert(0, response);
+      messages = [
+        aiMessage.copyWith(status: MessageStatus.sent),
+        ...messages.map((m) {
+          if (m.user.id == userMessage.user.id &&
+              m.createdAt == userMessage.createdAt) {
+            return m.copyWith(status: MessageStatus.sent);
+          }
+          return m;
+        }),
+      ];
+    });
+
+    // Simulate delivery status for both messages
+    _simulateMessageDeliveryStatus(aiMessage);
+    _simulateMessageDeliveryStatus(userMessage);
+  }
+
+  // Simulate message delivery status changes
+  void _simulateMessageDeliveryStatus(ChatMessage message) {
+    // Simulate received status after 1 second
+    Future.delayed(const Duration(seconds: 1), () {
+      _updateMessageStatus(message: message, newStatus: MessageStatus.received);
+
+      // Simulate read status after another second
+      Future.delayed(const Duration(seconds: 1), () {
+        _updateMessageStatus(message: message, newStatus: MessageStatus.read);
+      });
+    });
+  }
+
+  void _updateMessageStatus({
+    required ChatMessage message,
+    required MessageStatus newStatus,
+  }) {
+    setState(() {
+      messages = messages.map((m) {
+        if (m.user.id == message.user.id && m.createdAt == message.createdAt) {
+          return m.copyWith(status: newStatus);
+        }
+
+        return m;
+      }).toList();
     });
   }
 }
