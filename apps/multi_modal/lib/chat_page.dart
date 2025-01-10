@@ -1,6 +1,5 @@
 import "package:dash_chat_2/dash_chat_2.dart";
 import "package:flutter/material.dart";
-import "package:image_picker/image_picker.dart";
 import "package:multi_modal/chat_repository.dart";
 import "package:multi_modal/constants.dart";
 
