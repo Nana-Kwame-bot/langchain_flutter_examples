@@ -4,3 +4,4 @@
 
 #env
 .env
+apps/multi_modal/lib/azure_constants.dart

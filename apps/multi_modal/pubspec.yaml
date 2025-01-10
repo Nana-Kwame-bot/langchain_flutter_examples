@@ -11,6 +11,8 @@ dependencies:
   dash_chat_2: ^0.0.21
   flutter:
     sdk: flutter
+  langchain: ^0.7.7+2
+  langchain_openai: ^0.7.3
 
 dev_dependencies:
   flutter_lints: ^5.0.0
