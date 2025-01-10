@@ -91,7 +91,6 @@ class _ChatPageState extends State<ChatPage> {
     required String caption,
   }) async {
     final userMessage = ChatMessage(
-      status: MessageStatus.pending,
       user: Constants.user,
       createdAt: DateTime.now(),
       text: caption,
@@ -104,7 +103,7 @@ class _ChatPageState extends State<ChatPage> {
       ],
     );
 
-    _addPendingMessage(userMessage);
+    _addUserMessage(userMessage);
 
     final response = await _chatRepository.sendImageMessage(userMessage);
 
@@ -119,12 +118,11 @@ class _ChatPageState extends State<ChatPage> {
 
   void _handleOnSendPressed(ChatMessage textMessage) async {
     final userMessage = textMessage.copyWith(
-      status: MessageStatus.pending,
       user: Constants.user,
       createdAt: DateTime.now(),
     );
 
-    _addPendingMessage(userMessage);
+    _addUserMessage(userMessage);
 
     final response = await _chatRepository.sendTextMessage(userMessage);
 
@@ -137,7 +135,7 @@ class _ChatPageState extends State<ChatPage> {
     );
   }
 
-  void _addPendingMessage(ChatMessage message) {
+  void _addUserMessage(ChatMessage message) {
     setState(() {
       messages.insert(0, message);
     });
@@ -148,8 +146,6 @@ class _ChatPageState extends State<ChatPage> {
     required ChatMessage userMessage,
   }) {
     context.showErrorMessage(error);
-
-    _updateMessageStatus(message: userMessage, newStatus: MessageStatus.failed);
   }
 
   void _handleSendSuccess({
@@ -158,47 +154,15 @@ class _ChatPageState extends State<ChatPage> {
   }) {
     setState(() {
       messages = [
-        aiMessage.copyWith(status: MessageStatus.sent),
+        aiMessage,
         ...messages.map((m) {
           if (m.user.id == userMessage.user.id &&
               m.createdAt == userMessage.createdAt) {
-            return m.copyWith(status: MessageStatus.sent);
+            return m;
           }
           return m;
         }),
       ];
-    });
-
-    // Simulate delivery status for both messages
-    _simulateMessageDeliveryStatus(aiMessage);
-    _simulateMessageDeliveryStatus(userMessage);
-  }
-
-  // Simulate message delivery status changes
-  void _simulateMessageDeliveryStatus(ChatMessage message) {
-    // Simulate received status after 1 second
-    Future.delayed(const Duration(seconds: 1), () {
-      _updateMessageStatus(message: message, newStatus: MessageStatus.received);
-
-      // Simulate read status after another second
-      Future.delayed(const Duration(seconds: 1), () {
-        _updateMessageStatus(message: message, newStatus: MessageStatus.read);
-      });
-    });
-  }
-
-  void _updateMessageStatus({
-    required ChatMessage message,
-    required MessageStatus newStatus,
-  }) {
-    setState(() {
-      messages = messages.map((m) {
-        if (m.user.id == message.user.id && m.createdAt == message.createdAt) {
-          return m.copyWith(status: newStatus);
-        }
-
-        return m;
-      }).toList();
     });
   }
 }
