@@ -1,7 +1,10 @@
+import "dart:io";
+
 import "package:dash_chat_2/dash_chat_2.dart";
 import "package:flutter/material.dart";
 import "package:multi_modal/chat_repository.dart";
 import "package:multi_modal/constants.dart";
+import "package:image_picker/image_picker.dart";
 
 class ChatPage extends StatefulWidget {
   const ChatPage({super.key, required this.chatRepository});
@@ -12,41 +15,116 @@ class ChatPage extends StatefulWidget {
   State<ChatPage> createState() => _ChatPageState();
 }
 
+// ! fix renderflex
+
 class _ChatPageState extends State<ChatPage> {
   final TextEditingController _textController = TextEditingController();
+  final ImagePicker _picker = ImagePicker();
   ChatRepository get _chatRepository => widget.chatRepository;
 
   List<ChatMessage> messages = [];
 
-  @override
-  void initState() {
-    super.initState();
-    debugPrint("ChatPage initialized");
+  Future<void> _showImageCaptionDialog(XFile image) async {
+    final TextEditingController captionController = TextEditingController();
+
+    return showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return Dialog(
+          child: Container(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                const Text(
+                  "Preview & Add Caption",
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: 16),
+                // Image preview with constrained height
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(8),
+                  child: Image.file(
+                    File(image.path),
+                    height: 200,
+                    fit: BoxFit.cover,
+                  ),
+                ),
+                const SizedBox(height: 16),
+                TextField(
+                  controller: captionController,
+                  decoration: const InputDecoration(
+                    hintText: "Add a caption...",
+                    border: OutlineInputBorder(),
+                  ),
+                  maxLines: 3,
+                ),
+                const SizedBox(height: 16),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    TextButton(
+                      onPressed: () => Navigator.pop(context),
+                      child: const Text("Cancel"),
+                    ),
+                    const SizedBox(width: 8),
+                    ElevatedButton(
+                      onPressed: () {
+                        _sendImageMessage(image, captionController.text);
+                        Navigator.pop(context);
+                      },
+                      child: const Text("Send"),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
   }
 
-  // final ImagePicker _picker = ImagePicker();
+  Future<void> _pickAndShowImageDialog({
+    ImageSource source = ImageSource.gallery,
+  }) async {
+    final XFile? image = await _picker.pickImage(source: source);
 
-  // Future<void> sendImage() async {
-  //   final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
-  //   if (image != null) {
-  //     final ChatMessage message = ChatMessage(
-  //       user: Constants.user,
-  //       createdAt: DateTime.now(),
-  //       text: _textController.text,
-  //       medias: [
-  //         ChatMedia(
-  //           url: image.path,
-  //           fileName: image.name,
-  //           type: MediaType.image,
-  //         ),
-  //       ],
-  //     );
-  //     setState(() {
-  //       messages.insert(0, message);
-  //       _textController.clear();
-  //     });
-  //   }
-  // }
+    if (image != null) {
+      await _showImageCaptionDialog(image);
+    }
+  }
+
+  Future<void> _sendImageMessage(XFile image, String caption) async {
+    final ChatMessage message = ChatMessage(
+      user: Constants.user,
+      createdAt: DateTime.now(),
+      text: caption,
+      medias: [
+        ChatMedia(
+          url: image.path,
+          fileName: image.name,
+          type: MediaType.image,
+        ),
+      ],
+    );
+
+    setState(() {
+      messages.insert(0, message);
+    });
+
+    // Handle sending to chat repository
+    final response = await _chatRepository.handleOnSend(message);
+
+    setState(() {
+      messages.insert(0, response);
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -57,21 +135,20 @@ class _ChatPageState extends State<ChatPage> {
       ),
       body: DashChat(
         inputOptions: InputOptions(
-          // ! probably not going to be using this controller for anything
-          // if we go ahead and create a dialog or something for the image and
-          // text to show up together.
           textController: _textController,
           trailing: [
             IconButton(
-              icon: Icon(Icons.camera_alt),
-              onPressed: () {},
+              icon: const Icon(Icons.camera_alt),
+              onPressed: () {
+                _pickAndShowImageDialog(source: ImageSource.camera);
+              },
             ),
             IconButton(
-              icon: Icon(Icons.image),
-              onPressed: () {},
+              icon: const Icon(Icons.image),
+              onPressed: () => _pickAndShowImageDialog(),
             ),
             IconButton(
-              icon: Icon(Icons.attach_file),
+              icon: const Icon(Icons.attach_file),
               onPressed: () {},
             ),
           ],
