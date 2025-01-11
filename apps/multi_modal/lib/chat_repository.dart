@@ -23,8 +23,7 @@ class ChatRepository {
     ),
   );
 
-  static final memory = ConversationSummaryMemory(
-    llm: chatModel,
+  static final memory = ConversationBufferWindowMemory(
     aiPrefix: Constants.ai.firstName ?? AIChatMessage.defaultPrefix,
     humanPrefix: Constants.user.firstName ?? HumanChatMessage.defaultPrefix,
   );
