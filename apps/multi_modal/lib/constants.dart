@@ -1,11 +1,7 @@
 import "package:dash_chat_2/dash_chat_2.dart";
 
 abstract final class Constants {
-  static ChatUser user = ChatUser(
-    id: "1",
-    firstName: "Nana",
-    lastName: "Kwame",
-  );
+  static ChatUser user = ChatUser(id: "1");
 
   static ChatUser ai = ChatUser(
     id: "2",

@@ -40,8 +40,10 @@ class ChatRepository {
       if (medias.isNotEmpty) {
         for (final DashChatMedia(:url, :customProperties) in medias) {
           final isExternal = Uri.tryParse(url)?.hasScheme ?? false;
+
           final data =
               isExternal ? url : base64Encode(File(url).readAsBytesSync());
+
           mediaContents.add(
             ChatMessageContent.image(
               mimeType: customProperties?["mimeType"] ?? "image/jpeg",
