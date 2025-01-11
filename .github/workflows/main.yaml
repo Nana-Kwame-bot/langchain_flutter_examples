@@ -32,4 +32,4 @@ jobs:
         run: dart format --line-length 80 --set-exit-if-changed .
 
       - name: 🕵️ Analyze
-        run: flutter analyze --fatal-infos --fatal-warnings lib
+        run: flutter analyze --fatal-infos --fatal-warnings .
