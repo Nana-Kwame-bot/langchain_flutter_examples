@@ -4,7 +4,6 @@ import "package:dash_chat_2/dash_chat_2.dart" as dash_chat;
 import "package:flutter/foundation.dart";
 import "package:langchain/langchain.dart";
 import "package:langchain_openai/langchain_openai.dart";
-import "package:multi_modal/azure_constants.dart";
 import "package:multi_modal/constants.dart";
 import "package:multi_modal/utils/either.dart";
 
@@ -15,8 +14,7 @@ class ChatRepository {
   const ChatRepository();
 
   static final chatModel = ChatOpenAI(
-    baseUrl: AzureConstants.azureOpenaiChatCompletionProxy,
-    headers: {"X-Firebase-AppCheck": "debug"},
+    apiKey: Platform.environment["OPENAI_API_KEY"],
     defaultOptions: ChatOpenAIOptions(
       model: "gpt-4o",
       temperature: 0,
