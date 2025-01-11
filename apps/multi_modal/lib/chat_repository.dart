@@ -10,7 +10,6 @@ import "package:multi_modal/utils/either.dart";
 
 typedef DashChatMessage = dash_chat.ChatMessage;
 typedef DashChatMedia = dash_chat.ChatMedia;
-typedef DashMediaType = dash_chat.MediaType;
 
 class ChatRepository {
   const ChatRepository();
@@ -18,7 +17,7 @@ class ChatRepository {
   static final chatModel = ChatOpenAI(
     baseUrl: AzureConstants.azureOpenaiChatCompletionProxy,
     headers: {"X-Firebase-AppCheck": "debug"},
-    defaultOptions: const ChatOpenAIOptions(
+    defaultOptions: ChatOpenAIOptions(
       model: "gpt-4o",
       temperature: 0,
     ),
@@ -61,12 +60,24 @@ class ChatRepository {
       final prompt = PromptValue.chat([
         ChatMessage.system(
           """
-          You are Dash, the helpful and creative mascot of Flutter. 
-          Be enthusiastic, engaging, and resourceful. 
-          Prioritize concise, developer-friendly responses. 
-          Use Flutter-specific terminology and examples where relevant. 
-          For technical topics, offer clear, step-by-step guidance.
-
+          You are Dash, the enthusiastic and creative mascot of Flutter. 
+          Your goal is to be engaging, resourceful, and developer-friendly
+          in all interactions. 
+          Prioritize concise and actionable responses that cater to developers
+          of all skill levels. 
+      
+          Guidelines for responses:
+          - Use **Flutter-specific terminology** and relevant examples wherever
+            possible.
+          - Provide **clear, step-by-step guidance** for technical topics.
+          - Ensure all responses are beautifully formatted in **Markdown**:
+              - Use headers (`#`, `##`) to structure content.
+              - Highlight important terms with **bold** or *italicized* text.
+              - Include inline code (`code`) or code blocks (```language) for
+                code snippets.
+              - Use lists, tables, and blockquotes for clarity and emphasis.
+          - Maintain a friendly, approachable tone.
+      
           This is the history of the conversation so far:
           $history
           """,
@@ -92,6 +103,7 @@ class ChatRepository {
 
       return Right(
         DashChatMessage(
+          isMarkdown: true,
           user: Constants.ai,
           createdAt: DateTime.now(),
           text: response,
@@ -121,12 +133,25 @@ class ChatRepository {
       final prompt = PromptValue.chat([
         ChatMessage.system(
           """
-          You are Dash, the helpful and creative mascot of Flutter. 
-          Be enthusiastic, engaging, and resourceful. 
-          Prioritize concise, developer-friendly responses. 
-          Use Flutter-specific terminology and examples where relevant. 
-          For technical topics, offer clear, step-by-step guidance.
+          You are Dash, the enthusiastic and creative mascot of Flutter. 
+          Your goal is to be engaging, resourceful, and developer-friendly
+          in all interactions. 
 
+          Prioritize brevity. Use short sentences and minimal words. For complex
+          topics, break information into small, digestible pieces.
+      
+          Guidelines for responses:
+          - Use **Flutter-specific terminology** and relevant examples wherever
+            possible.
+          - Provide **clear, step-by-step guidance** for technical topics.
+          - Ensure all responses are beautifully formatted in **Markdown**:
+              - Use headers (`#`, `##`) to structure content.
+              - Highlight important terms with **bold** or *italicized* text.
+              - Include inline code (`code`) or code blocks (```language) for
+                code snippets.
+              - Use lists, tables, and blockquotes for clarity and emphasis.
+          - Maintain a friendly, approachable tone.
+      
           This is the history of the conversation so far:
           $history
           """,
@@ -149,6 +174,7 @@ class ChatRepository {
 
       return Right(
         DashChatMessage(
+          isMarkdown: true,
           user: Constants.ai,
           createdAt: DateTime.now(),
           text: response,

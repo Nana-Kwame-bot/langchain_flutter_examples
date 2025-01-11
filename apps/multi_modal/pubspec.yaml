@@ -13,12 +13,16 @@ dependencies:
     sdk: flutter
   image_picker: ^1.1.2
   langchain: ^0.7.7+2
+  langchain_community: ^0.3.3
   langchain_openai: ^0.7.3
 
 dev_dependencies:
   flutter_lints: ^5.0.0
   flutter_test:
     sdk: flutter
+
+dependency_overrides:
+  path: ^1.9.1
 
 flutter:
   uses-material-design: true

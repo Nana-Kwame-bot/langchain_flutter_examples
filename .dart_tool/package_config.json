@@ -14,6 +14,12 @@
       "languageVersion": "2.18"
     },
     {
+      "name": "beautiful_soup_dart",
+      "rootUri": "file:///Users/user/.pub-cache/hosted/pub.dev/beautiful_soup_dart-0.3.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
       "name": "boolean_selector",
       "rootUri": "file:///Users/user/.pub-cache/hosted/pub.dev/boolean_selector-2.1.1",
       "packageUri": "lib/",
@@ -72,6 +78,12 @@
       "rootUri": "file:///Users/user/.pub-cache/hosted/pub.dev/csslib-1.0.2",
       "packageUri": "lib/",
       "languageVersion": "3.1"
+    },
+    {
+      "name": "csv",
+      "rootUri": "file:///Users/user/.pub-cache/hosted/pub.dev/csv-6.0.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
     },
     {
       "name": "cupertino_icons",
@@ -146,6 +158,12 @@
       "languageVersion": "3.1"
     },
     {
+      "name": "flat_buffers",
+      "rootUri": "file:///Users/user/.pub-cache/hosted/pub.dev/flat_buffers-23.5.26",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
       "name": "flutter",
       "rootUri": "file:///usr/local/Caskroom/flutter/packages/flutter",
       "packageUri": "lib/",
@@ -198,6 +216,12 @@
       "rootUri": "file:///Users/user/.pub-cache/hosted/pub.dev/freezed_annotation-2.4.4",
       "packageUri": "lib/",
       "languageVersion": "3.0"
+    },
+    {
+      "name": "glob",
+      "rootUri": "file:///Users/user/.pub-cache/hosted/pub.dev/glob-2.1.2",
+      "packageUri": "lib/",
+      "languageVersion": "2.19"
     },
     {
       "name": "html",
@@ -272,14 +296,32 @@
       "languageVersion": "3.0"
     },
     {
+      "name": "iregexp",
+      "rootUri": "file:///Users/user/.pub-cache/hosted/pub.dev/iregexp-0.1.2",
+      "packageUri": "lib/",
+      "languageVersion": "3.0"
+    },
+    {
       "name": "json_annotation",
       "rootUri": "file:///Users/user/.pub-cache/hosted/pub.dev/json_annotation-4.9.0",
       "packageUri": "lib/",
       "languageVersion": "3.0"
     },
     {
+      "name": "json_path",
+      "rootUri": "file:///Users/user/.pub-cache/hosted/pub.dev/json_path-0.7.4",
+      "packageUri": "lib/",
+      "languageVersion": "3.0"
+    },
+    {
       "name": "langchain",
       "rootUri": "file:///Users/user/.pub-cache/hosted/pub.dev/langchain-0.7.7+2",
+      "packageUri": "lib/",
+      "languageVersion": "3.4"
+    },
+    {
+      "name": "langchain_community",
+      "rootUri": "file:///Users/user/.pub-cache/hosted/pub.dev/langchain_community-0.3.3",
       "packageUri": "lib/",
       "languageVersion": "3.4"
     },
@@ -344,6 +386,18 @@
       "languageVersion": "2.17"
     },
     {
+      "name": "math_expressions",
+      "rootUri": "file:///Users/user/.pub-cache/hosted/pub.dev/math_expressions-2.6.0",
+      "packageUri": "lib/",
+      "languageVersion": "3.1"
+    },
+    {
+      "name": "maybe_just_nothing",
+      "rootUri": "file:///Users/user/.pub-cache/hosted/pub.dev/maybe_just_nothing-0.5.3",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
       "name": "meta",
       "rootUri": "file:///Users/user/.pub-cache/hosted/pub.dev/meta-1.15.0",
       "packageUri": "lib/",
@@ -354,6 +408,12 @@
       "rootUri": "file:///Users/user/.pub-cache/hosted/pub.dev/mime-2.0.0",
       "packageUri": "lib/",
       "languageVersion": "3.2"
+    },
+    {
+      "name": "objectbox",
+      "rootUri": "file:///Users/user/.pub-cache/hosted/pub.dev/objectbox-4.0.3",
+      "packageUri": "lib/",
+      "languageVersion": "2.17"
     },
     {
       "name": "octo_image",
@@ -369,9 +429,9 @@
     },
     {
       "name": "path",
-      "rootUri": "file:///Users/user/.pub-cache/hosted/pub.dev/path-1.9.0",
+      "rootUri": "file:///Users/user/.pub-cache/hosted/pub.dev/path-1.9.1",
       "packageUri": "lib/",
-      "languageVersion": "3.0"
+      "languageVersion": "3.4"
     },
     {
       "name": "path_provider",
@@ -410,6 +470,12 @@
       "languageVersion": "3.2"
     },
     {
+      "name": "petitparser",
+      "rootUri": "file:///Users/user/.pub-cache/hosted/pub.dev/petitparser-6.0.2",
+      "packageUri": "lib/",
+      "languageVersion": "3.2"
+    },
+    {
       "name": "platform",
       "rootUri": "file:///Users/user/.pub-cache/hosted/pub.dev/platform-3.1.6",
       "packageUri": "lib/",
@@ -418,6 +484,12 @@
     {
       "name": "plugin_platform_interface",
       "rootUri": "file:///Users/user/.pub-cache/hosted/pub.dev/plugin_platform_interface-2.1.8",
+      "packageUri": "lib/",
+      "languageVersion": "3.0"
+    },
+    {
+      "name": "rfc_6901",
+      "rootUri": "file:///Users/user/.pub-cache/hosted/pub.dev/rfc_6901-0.2.0",
       "packageUri": "lib/",
       "languageVersion": "3.0"
     },
@@ -498,6 +570,12 @@
       "rootUri": "file:///Users/user/.pub-cache/hosted/pub.dev/synchronized-3.3.0+3",
       "packageUri": "lib/",
       "languageVersion": "3.5"
+    },
+    {
+      "name": "tavily_dart",
+      "rootUri": "file:///Users/user/.pub-cache/hosted/pub.dev/tavily_dart-0.1.0+1",
+      "packageUri": "lib/",
+      "languageVersion": "3.4"
     },
     {
       "name": "term_glyph",
@@ -638,7 +716,7 @@
       "languageVersion": "3.6"
     }
   ],
-  "generated": "2025-01-10T21:28:18.668348Z",
+  "generated": "2025-01-10T23:56:34.482208Z",
   "generator": "pub",
   "generatorVersion": "3.6.0",
   "flutterRoot": "file:///usr/local/Caskroom/flutter",

@@ -27,7 +27,7 @@ class _ChatPageState extends State<ChatPage> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: const Text("Multi-Modal Chatbot"),
+        title: const Text("Chat with Dash"),
       ),
       body: DashChat(
         typingUsers: typingUsers,
@@ -93,7 +93,7 @@ class _ChatPageState extends State<ChatPage> {
         ChatMedia(
           url: path,
           fileName: name,
-          type: DashMediaType.image,
+          type: MediaType.image,
           customProperties: {
             "mimeType": mimeType,
           },
