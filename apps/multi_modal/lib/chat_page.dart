@@ -1,4 +1,5 @@
 import "package:dash_chat_2/dash_chat_2.dart";
+import "package:flutter/foundation.dart";
 import "package:flutter/material.dart";
 import "package:multi_modal/extensions/build_context_extension.dart";
 import "package:multi_modal/chat_repository.dart";
@@ -24,6 +25,9 @@ class _ChatPageState extends State<ChatPage> {
 
   @override
   Widget build(BuildContext context) {
+    var isMobiletPlatform = defaultTargetPlatform == TargetPlatform.iOS ||
+        defaultTargetPlatform == TargetPlatform.android;
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
@@ -35,12 +39,13 @@ class _ChatPageState extends State<ChatPage> {
           inputDisabled: typingUsers.isNotEmpty,
           sendOnEnter: true,
           trailing: [
-            IconButton(
-              icon: const Icon(Icons.camera_alt),
-              onPressed: typingUsers.isEmpty
-                  ? () => _pickAndShowImageDialog(source: ImageSource.camera)
-                  : null,
-            ),
+            if (isMobiletPlatform)
+              IconButton(
+                icon: const Icon(Icons.camera_alt),
+                onPressed: typingUsers.isEmpty
+                    ? () => _pickAndShowImageDialog(source: ImageSource.camera)
+                    : null,
+              ),
             IconButton(
               icon: const Icon(Icons.image),
               onPressed:
