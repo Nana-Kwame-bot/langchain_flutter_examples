@@ -1,6 +1,7 @@
 import "package:dash_chat_2/dash_chat_2.dart";
 import "package:flutter/foundation.dart";
 import "package:flutter/material.dart";
+import "package:multi_modal/deep_seek_chat_repository.dart";
 import "package:multi_modal/extensions/build_context_extension.dart";
 import "package:multi_modal/chat_repository.dart";
 import "package:multi_modal/constants.dart";
@@ -8,9 +9,13 @@ import "package:image_picker/image_picker.dart";
 import "package:multi_modal/extensions/chat_message_extension.dart";
 
 class ChatPage extends StatefulWidget {
-  const ChatPage({super.key, required this.chatRepository});
+  const ChatPage(
+      {super.key,
+      required this.chatRepository,
+      required this.deepSeekChatRepository});
 
   final ChatRepository chatRepository;
+  final DeepSeekChatRepository deepSeekChatRepository;
 
   @override
   State<ChatPage> createState() => _ChatPageState();
@@ -19,6 +24,8 @@ class ChatPage extends StatefulWidget {
 class _ChatPageState extends State<ChatPage> {
   final ImagePicker _picker = ImagePicker();
   ChatRepository get _chatRepository => widget.chatRepository;
+  DeepSeekChatRepository get _deepSeekChatRepository =>
+      widget.deepSeekChatRepository;
 
   List<ChatMessage> messages = [];
   List<ChatUser> typingUsers = [];
@@ -108,7 +115,8 @@ class _ChatPageState extends State<ChatPage> {
 
     _addUserMessage(userMessage);
 
-    final response = await _chatRepository.sendImageMessage(userMessage);
+    final response =
+        await _deepSeekChatRepository.sendImageMessage(userMessage);
 
     setState(() {
       typingUsers.remove(Constants.ai);
@@ -131,7 +139,7 @@ class _ChatPageState extends State<ChatPage> {
 
     _addUserMessage(userMessage);
 
-    final response = await _chatRepository.sendTextMessage(userMessage);
+    final response = await _deepSeekChatRepository.sendTextMessage(userMessage);
 
     setState(() {
       typingUsers.remove(Constants.ai);

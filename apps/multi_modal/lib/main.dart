@@ -1,6 +1,7 @@
 import "package:flutter/material.dart";
 import "package:multi_modal/chat_page.dart";
 import "package:multi_modal/chat_repository.dart";
+import "package:multi_modal/deep_seek_chat_repository.dart";
 
 void main() {
   runApp(const MyApp());
@@ -24,7 +25,10 @@ class MyApp extends StatelessWidget {
         ),
         useMaterial3: true,
       ),
-      home: const ChatPage(chatRepository: ChatRepository()),
+      home: const ChatPage(
+        chatRepository: ChatRepository(),
+        deepSeekChatRepository: DeepSeekChatRepository(),
+      ),
       // home: Basic(),
     );
   }
