@@ -13,7 +13,7 @@ dependencies:
     sdk: flutter
   image_picker: ^1.1.2
   langchain: ^0.7.7+2
-  langchain_openai: ^0.7.5
+  langchain_openai: ^0.7.6
 
 dev_dependencies:
   flutter_lints: ^5.0.0
