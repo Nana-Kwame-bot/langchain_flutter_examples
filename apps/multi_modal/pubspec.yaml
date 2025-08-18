@@ -11,7 +11,7 @@ dependencies:
   dash_chat_2: ^0.0.21
   flutter:
     sdk: flutter
-  image_picker: ^1.1.2
+  image_picker: ^1.2.0
   langchain: ^0.7.7+2
   langchain_openai: ^0.7.6
 
