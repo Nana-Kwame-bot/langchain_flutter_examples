@@ -236,10 +236,10 @@ packages:
     dependency: transitive
     description:
       name: freezed_annotation
-      sha256: c2e2d632dd9b8a2b7751117abcfc2b4888ecfe181bd9fca7170d9ef02e595fe2
+      sha256: "7294967ff0a6d98638e7acb774aac3af2550777accd8149c90af5b014e6d44d8"
       url: "https://pub.dev"
     source: hosted
-    version: "2.4.4"
+    version: "3.1.0"
   html:
     dependency: transitive
     description:
@@ -252,10 +252,10 @@ packages:
     dependency: transitive
     description:
       name: http
-      sha256: "2c11f3f94c687ee9bad77c171151672986360b2b001d109814ee7140b2cf261b"
+      sha256: bb2ce4590bc2667c96f318d68cac1b5a7987ec819351d32b1c987239a815e007
       url: "https://pub.dev"
     source: hosted
-    version: "1.4.0"
+    version: "1.5.0"
   http_parser:
     dependency: transitive
     description:
@@ -348,26 +348,26 @@ packages:
     dependency: "direct main"
     description:
       name: langchain
-      sha256: "85ecefa1537f9718dab109d437a7421bf084bb0b1c558ed38091127855c97725"
+      sha256: d6ae85d7c23d680d97f3ca8c1e96139c9fb77bd2896e9b02ab1f0b1e3e4d6857
       url: "https://pub.dev"
     source: hosted
-    version: "0.7.9"
+    version: "0.8.0"
   langchain_core:
     dependency: transitive
     description:
       name: langchain_core
-      sha256: "4499c01dcf49bb046376661ab447d660c4e36671d52e9cabc8c7225d373643d9"
+      sha256: "10d328267cddca469ef8b2145809f96e792561ae7a1a2e5e871910d9814520ed"
       url: "https://pub.dev"
     source: hosted
-    version: "0.3.9"
+    version: "0.4.0"
   langchain_openai:
     dependency: "direct main"
     description:
       name: langchain_openai
-      sha256: bacffd123f5d7785b6f266c514c798f6c13b607d91bf34432ad6e027b6472b8f
+      sha256: "44974acc8753f95f706aa0a783e3eafe30927ae1871468da592c0fe3a035c394"
       url: "https://pub.dev"
     source: hosted
-    version: "0.7.6"
+    version: "0.8.0"
   langchain_tiktoken:
     dependency: transitive
     description:
@@ -460,10 +460,10 @@ packages:
     dependency: transitive
     description:
       name: openai_dart
-      sha256: fcfedc6e01b9d99f58ca11bb0d4245890f488427b930bd4e7472a78afa344011
+      sha256: "37e24d9826843c02e443324dd71cc90faef7bbd5925448c9469fff1be87559f5"
       url: "https://pub.dev"
     source: hosted
-    version: "0.5.4"
+    version: "0.6.0"
   path:
     dependency: "direct overridden"
     description:
